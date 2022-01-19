@@ -146,9 +146,10 @@ class Posts extends Controller{
             $post = $this->postModel->getPostByID($id);
 
             //check for owner. If not owner, redirect
-            if($post->user_id !=  $_SESSION['user_id']){
+            if($post->user_id !=  $_SESSION['user_id'] && isLoggedIn() != 'ADMIN'){
                 redirect('posts');
             }
+
 
             if($this->postModel->deletePost($id)){
                 flash('post_message', 'Post Removed');

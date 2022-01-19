@@ -2,7 +2,7 @@
 <?php require APPROOT . '/views/includes/header.php'; ?>
 
 <div class="container">
-    <h1 class="text-center bg-light"><i class="fa fa-dashboard"></i> Admin Dashboard</h1>
+    <h1 class="text-center bg-light"><i class="fa fa-tachometer-alt"></i> Admin Dashboard</h1>
     <div class="row">
                 <div class="col">
                     <h3 class="text-center">USERS</h3>
@@ -12,9 +12,9 @@
 
                             <span class="float-end">
                         <?php echo $user->email;  ?>
-                            <a href="<?php echo URLROOT; ?>/admins/showUser/<?php echo $user->id; ?>" class="btn btn-info btn-sm ms-2">View</a>
-                        <a href="#" class="btn btn-secondary btn-sm ms-2">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm ms-2">Delete</a>
+                            <a href="<?php echo URLROOT; ?>/admins/showUser/<?php echo $user->id; ?>" class="ms-2"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="ms-2"><i class="fa fa-edit"></i></a>
+                        <a href="#" class="ms-2"><i class="fa fa-trash-alt"></i></a>
                         </span>
                         </p>
                     </div>
@@ -30,9 +30,9 @@
 
                     <span class="float-end">
                         Written by <?php echo $post->name;  ?>
-                            <a href="<?php echo URLROOT;  ?>/posts/show/<?php echo $post->postId;  ?>" class="btn btn-info btn-sm ms-2">View</a>
-                        <a href="#" class="btn btn-secondary btn-sm ms-2">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm ms-2">Delete</a>
+                            <a href="<?php echo URLROOT;  ?>/posts/show/<?php echo $post->postId;  ?>"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="ms-2"><i class="fa fa-edit"></i></a>
+                        <a href="#" class="ms-2"><i class="fa fa-trash-alt"></i></a>
                         </span>
                 </p>
             </div>

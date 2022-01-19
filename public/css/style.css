@@ -1,4 +1,11 @@
-.scrollY {
-    height:10px;
-    overflow-y: scroll;
+i.fa-trash-alt {
+    color: red;
+}
+
+i.fa-edit {
+    color:dodgerblue;
+}
+
+i.fa-eye {
+    color:green;
 }

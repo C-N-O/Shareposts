@@ -43,8 +43,8 @@ class Admins extends Controller{
 
             //Make sure errors are empty
             if (empty($data['email_err']) && empty($data['password_err'])) {
-//                //Hash the password
-//                $hashedPW = password_hash($data['password'], PASSWORD_DEFAULT);
+               //Hash the password
+                $hashedPW = password_hash($data['password'], PASSWORD_DEFAULT);
 
 
                 //check and set logged in user
@@ -118,12 +118,6 @@ class Admins extends Controller{
         $this->view('admins/edit', $data);
     }
 
-    public function changePassword()
-    {
-        $data = [];
-        $this->view('admins/changePassword', $data);
-    }
-
     public function index()
     {
         if(isLoggedIn() == 'USER'){
@@ -160,5 +154,85 @@ class Admins extends Controller{
             'posts' => $post
         ];
         $this->view('admins/showAllUserPosts', $data);
+    }
+
+    public function changePassWord()
+    {
+        //check for POST
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            //Sanitize POST Data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'id' => trim($_SESSION['admin_id']),
+                'name' => trim($_SESSION['admin_name']),
+                'email' => trim($_SESSION['admin_email']),
+                'old_password' => trim($_POST['old-password']),
+                'new_password' => trim($_POST['new-password']),
+                'confirm_new_password' => trim($_POST['confirm-new-password']),
+                'old_password_err' => '',
+                'new_password_err' => '',
+                'confirm_new_password_err' => '',
+            ];
+
+            //Validate that old password field is not empty on change password page and matches old pw in database
+            if (empty($data['old_password'])){
+                $data["old_password_err"] = "Please enter your old password";
+            } else {
+                $admin = $this->adminModel->getAdminByID($_SESSION['admin_id']);
+                if (!password_verify($data['old_password'], $admin->password)) {
+                    $data["old_password_err"] = "This password does not match your old password";
+                }
+            }
+
+            //Validate new password field is not empty on change password page and meets 6 char requirement
+            if (empty($data['new_password'])){
+                $data["new_password_err"] = "Please enter your new password";
+            } elseif (strlen($data['new_password']) < 6){
+                $data["new_password_err"] = "New password must be at least 6 characters";
+            } else{
+                $data['new_password_err'] = "";
+            }
+
+            //Validate confirm new password field is not empty on change password page
+            if (empty($data['confirm_new_password'])){
+                $data["confirm_new_password_err"] = "Please confirm your new password";
+            }elseif($data['new_password'] != $data['confirm_new_password']){
+                $data["confirm_new_password_err"] = "Passwords do not match";
+            }
+
+
+            //Make sure errors are empty
+            if (empty($data['old_password_err']) && empty($data['new_password_err']) && empty($data['confirm_new_password_err'])) {
+
+                //Hash the password
+                $data['new_password'] = password_hash($data['new_password'], PASSWORD_DEFAULT);
+
+                //Do the actual password update
+                if($this->adminModel->updatePassword($data)){
+                    flash('admin_message', 'Your Admin password has been updated');
+                    $this->view('admins/profile', $data);
+                }else{
+                    die('Admin password could not be updated');
+                }
+
+            } else{
+                $this->view('admins/changePassword', $data);
+            }
+
+        } else {
+            //Init data
+            $data = [
+                'old_password' => '',
+                'new_password' => '',
+                'confirm_new_password' => '',
+                'old_password_err' => '',
+                'new_password_err' => '',
+                'confirm_new_password_err' => '',
+            ];
+            //load view
+            $this->view('admins/changePassword', $data);
+        }
+
     }
 }
